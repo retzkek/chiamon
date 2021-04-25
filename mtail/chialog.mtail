@@ -1,0 +1,18 @@
+# start with harvester logs, e.g.
+# 2021-04-24T11:01:53.390 harvester chia.harvester.harvester: INFO     1 plots were eligible for farming 940b588c2a... Found 0 proofs. Time: 0.98087 s. Total 19 plots
+
+counter chia_harvester_blocks_total
+gauge chia_harvester_plots_total
+counter chia_harvester_plots_eligible
+counter chia_harvester_proofs_total
+histogram chia_harvester_search_time buckets 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 10
+/^(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+) harvester chia.harvester.harvester: \w+\s+ (?P<eligible_plots>\d+) plots were eligible for farming \w+\.\.\. Found (?P<proofs>\d+) proofs\. Time: (?P<search_time>[\d\.]+) s\. Total (?P<total_plots>\d+) plots$/ {
+    strptime($timestamp, "2006-01-02T15:04:05")
+    chia_harvester_blocks_total++
+    chia_harvester_plots_total = $total_plots
+    chia_harvester_plots_eligible += $eligible_plots
+    chia_harvester_proofs_total += $proofs
+    chia_harvester_search_time = $search_time
+}
+
+

@@ -1,0 +1,31 @@
+version: '2'
+services:
+  mtail:
+    build: mtail
+    command:
+      - "-progs"
+      - "/etc/mtail"
+      - "-logs"
+      - "/var/log/chia/debug.log"
+      - "-logtostderr"
+    volumes:
+      - ${HOME}/.chia/mainnet/log/debug.log:/var/log/chia/debug.log
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    command:
+      - '--path.rootfs=/host'
+    pid: host
+    volumes:
+      - '/:/host:ro,rslave'
+  prometheus:
+    build: prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - prom_data:/prometheus
+  grafana:
+    build: grafana
+    ports:
+      - "127.0.0.1:3000:3000"
+volumes:
+  prom_data:
