@@ -5,14 +5,20 @@ counter chia_harvester_blocks_total
 gauge chia_harvester_plots_total
 counter chia_harvester_plots_eligible
 counter chia_harvester_proofs_total
-histogram chia_harvester_search_time buckets 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 10
+# keep this from getting too high cardinality, plots_eligible will be one of: 0, 1, 2, many
+histogram chia_harvester_search_time buckets 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 10, 30 by plots_eligible
+
 /^(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+) harvester chia.harvester.harvester: \w+\s+ (?P<eligible_plots>\d+) plots were eligible for farming \w+\.\.\. Found (?P<proofs>\d+) proofs\. Time: (?P<search_time>[\d\.]+) s\. Total (?P<total_plots>\d+) plots$/ {
     strptime($timestamp, "2006-01-02T15:04:05")
     chia_harvester_blocks_total++
     chia_harvester_plots_total = $total_plots
     chia_harvester_plots_eligible += $eligible_plots
     chia_harvester_proofs_total += $proofs
-    chia_harvester_search_time = $search_time
+    $eligible_plots > 2 {
+        chia_harvester_search_time["many"] = $search_time
+    } else {
+        chia_harvester_search_time[$eligible_plots] = $search_time
+    }
 }
 
 

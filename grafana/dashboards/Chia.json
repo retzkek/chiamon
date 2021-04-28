@@ -15,7 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 11,
+  "iteration": 1619642042000,
   "links": [],
   "panels": [
     {
@@ -25,6 +26,7 @@
           "color": {
             "mode": "thresholds"
           },
+          "custom": {},
           "mappings": [
             {
               "from": "",
@@ -47,12 +49,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": null
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 1
               }
             ]
           }
@@ -60,14 +62,14 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 8,
         "w": 6,
         "x": 0,
         "y": 0
       },
       "id": 2,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -81,7 +83,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.4.1",
       "targets": [
         {
           "expr": "chia_harvester_proofs_total",
@@ -101,6 +103,7 @@
           "color": {
             "mode": "thresholds"
           },
+          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -119,7 +122,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 8,
         "w": 6,
         "x": 6,
         "y": 0
@@ -140,7 +143,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.4.1",
       "targets": [
         {
           "expr": "chia_harvester_plots_total",
@@ -159,6 +162,7 @@
           "color": {
             "mode": "thresholds"
           },
+          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -168,11 +172,16 @@
                 "value": null
               },
               {
+                "color": "orange",
+                "value": 0.9
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 0.95
               }
             ]
-          }
+          },
+          "unit": "percentunit"
         },
         "overrides": []
       },
@@ -182,15 +191,16 @@
         "x": 12,
         "y": 0
       },
-      "id": 10,
+      "id": 14,
+      "links": [],
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
-            "mean"
+            "lastNotNull"
           ],
           "fields": "",
           "values": false
@@ -198,24 +208,22 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.4.1",
       "targets": [
         {
-          "expr": "chia_harvester_plots_eligible/chia_harvester_blocks_total",
-          "hide": false,
+          "expr": "(node_filesystem_size{mountpoint=~\"$mounts\"} - node_filesystem_avail{mountpoint=~\"$mounts\"})/ node_filesystem_size{mountpoint=~\"$mounts\"}",
+          "format": "time_series",
           "interval": "",
-          "legendFormat": "Eligible Plots per Block",
-          "refId": "B"
-        },
-        {
-          "expr": "histogram_quantile(0.95, sum(rate(chia_harvester_search_time_bucket[$__rate_interval])) by (le))",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "95% search time",
-          "refId": "C"
+          "intervalFactor": 2,
+          "legendFormat": "{{mountpoint}}",
+          "metric": "node_filesystem_size",
+          "refId": "A",
+          "step": 10
         }
       ],
-      "title": "Farm",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Disk Usage",
       "type": "stat"
     },
     {
@@ -224,32 +232,134 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "editable": true,
-      "error": false,
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          }
+        },
         "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
-      "grid": {},
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 12,
         "x": 0,
+        "y": 8
+      },
+      "hiddenSeries": false,
+      "id": 10,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.1",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(chia_harvester_search_time_bucket[$__rate_interval])) by (le,plots_eligible))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{plots_eligible}} Plots Past Filter",
+          "refId": "C"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Search Time",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "Free": "#70DBED"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 7,
+      "fillGradient": 0,
+      "grid": {},
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
         "y": 10
       },
       "hiddenSeries": false,
-      "id": 9,
+      "id": 12,
       "legend": {
         "alignAsTable": true,
-        "avg": false,
+        "avg": true,
         "current": true,
-        "hideEmpty": true,
-        "hideZero": true,
-        "max": false,
+        "max": true,
         "min": false,
-        "rightSide": true,
         "show": true,
         "total": false,
         "values": true
@@ -262,24 +372,55 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.4.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "alias": "Cached",
+          "color": "#64B0C8"
+        }
+      ],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
-          "exemplar": true,
-          "expr": "(node_filesystem_size_bytes{mountpoint=~\"/farm.*\"} - node_filesystem_avail_bytes{mountpoint=~\"/farm.*\"})/ node_filesystem_size_bytes{mountpoint=~\"/farm.*\"}",
-          "format": "time_series",
+          "expr": "node_memory_MemTotal{instance=\"$node\"} - node_memory_MemFree{instance=\"$node\"} - node_memory_Buffers{instance=\"$node\"} - node_memory_Cached{instance=\"$node\"}",
+          "hide": false,
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{mountpoint}}",
-          "metric": "node_filesystem_size",
+          "legendFormat": "Used",
+          "metric": "node_memory_MemFree",
           "refId": "A",
+          "step": 10
+        },
+        {
+          "expr": "node_memory_Buffers{instance=\"$node\"}",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Buffered",
+          "metric": "node_memory_Buffers",
+          "refId": "D",
+          "step": 10
+        },
+        {
+          "expr": "node_memory_Cached{instance=\"$node\"}",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Cached",
+          "metric": "node_memory_SwapFree",
+          "refId": "B",
+          "step": 10
+        },
+        {
+          "expr": "node_memory_MemFree{instance=\"$node\"}",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Free",
+          "metric": "node_memory_MemTotal",
+          "refId": "C",
           "step": 10
         }
       ],
@@ -287,12 +428,12 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Farm Disk Usage",
+      "title": "Memory",
       "tooltip": {
         "msResolution": false,
         "shared": true,
         "sort": 0,
-        "value_type": "cumulative"
+        "value_type": "individual"
       },
       "type": "graph",
       "xaxis": {
@@ -304,16 +445,14 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:399",
-          "format": "percentunit",
-          "label": "",
+          "format": "bytes",
+          "label": null,
           "logBase": 1,
-          "max": "1",
+          "max": null,
           "min": "0",
           "show": true
         },
         {
-          "$$hashKey": "object:400",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -328,111 +467,69 @@
       }
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
       "datasource": "Prometheus",
-      "editable": true,
-      "error": false,
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 75
+              }
+            ]
+          }
+        },
         "overrides": []
       },
-      "fill": 1,
-      "fillGradient": 0,
-      "grid": {},
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 12,
-        "x": 12,
-        "y": 10
+        "x": 0,
+        "y": 15
       },
-      "hiddenSeries": false,
-      "id": 8,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "hideEmpty": true,
-        "hideZero": true,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 2,
-      "links": [],
-      "nullPointMode": "connected",
+      "id": 15,
       "options": {
-        "alertThreshold": true
+        "displayMode": "gradient",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "text": {}
       },
-      "percentage": false,
-      "pluginVersion": "7.5.4",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      "pluginVersion": "7.4.1",
       "targets": [
         {
-          "exemplar": true,
-          "expr": "(node_filesystem_size_bytes{mountpoint=\"/chia_tmp\"} - node_filesystem_avail_bytes{mountpoint=\"/chia_tmp\"})/ node_filesystem_size_bytes{mountpoint=\"/chia_tmp\"}",
-          "format": "time_series",
+          "expr": "sum(chia_harvester_search_time_bucket{plots_eligible!=\"0\"}) by (le)",
+          "format": "heatmap",
+          "hide": false,
           "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "SSD Disk Usage",
-          "metric": "node_filesystem_size",
-          "refId": "A",
-          "step": 10
+          "legendFormat": "{{le}}",
+          "refId": "C"
         }
       ],
-      "thresholds": [],
       "timeFrom": null,
-      "timeRegions": [],
       "timeShift": null,
-      "title": "SSD Disk Usage",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:399",
-          "format": "percentunit",
-          "label": "",
-          "logBase": 1,
-          "max": "1",
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:400",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "title": "Search Time Histogram (at least one plot passed filter)",
+      "type": "bargauge"
     }
   ],
   "refresh": "1m",
@@ -440,15 +537,86 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "localhost:9100",
+          "value": "localhost:9100"
+        },
+        "datasource": null,
+        "definition": "label_values(node_filesystem_size, instance)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "node",
+        "options": [],
+        "query": {
+          "query": "label_values(node_filesystem_size, instance)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "/chia_tmp",
+            "/farm2",
+            "/farm"
+          ],
+          "value": [
+            "/chia_tmp",
+            "/farm2",
+            "/farm"
+          ]
+        },
+        "datasource": null,
+        "definition": "label_values(node_filesystem_size, mountpoint)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "mounts",
+        "options": [],
+        "query": {
+          "query": "label_values(node_filesystem_size, mountpoint)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Chia",
   "uid": "P-ipES9Mz",
-  "version": 2
+  "version": 20
 }
