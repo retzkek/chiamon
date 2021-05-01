@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 11,
-  "iteration": 1619642042000,
+  "iteration": 1619819608143,
   "links": [],
   "panels": [
     {
@@ -186,7 +186,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 8,
         "w": 12,
         "x": 12,
         "y": 0
@@ -262,7 +262,7 @@
         "total": false,
         "values": false
       },
-      "lines": true,
+      "lines": false,
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
@@ -271,7 +271,7 @@
       "percentage": false,
       "pluginVersion": "7.4.1",
       "pointradius": 2,
-      "points": false,
+      "points": true,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
@@ -279,10 +279,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum(rate(chia_harvester_search_time_bucket[$__rate_interval])) by (le,plots_eligible))",
+          "expr": "histogram_quantile(1, sum(rate(chia_harvester_search_time_bucket[$__rate_interval])) by (le,plots_eligible))",
           "hide": false,
           "interval": "",
-          "legendFormat": "{{plots_eligible}} Plots Past Filter",
+          "legendFormat": "{{plots_eligible}} Plots Passed Filter",
           "refId": "C"
         }
       ],
@@ -306,6 +306,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:25",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -314,6 +315,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:26",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -328,13 +330,12 @@
       }
     },
     {
-      "aliasColors": {
-        "Free": "#70DBED"
-      },
+      "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
+      "description": "",
       "editable": true,
       "error": false,
       "fieldConfig": {
@@ -343,26 +344,29 @@
         },
         "overrides": []
       },
-      "fill": 7,
+      "fill": 1,
       "fillGradient": 0,
       "grid": {},
       "gridPos": {
-        "h": 12,
+        "h": 7,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 8
       },
       "hiddenSeries": false,
-      "id": 12,
+      "id": 17,
       "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
         "min": false,
+        "rightSide": false,
         "show": true,
         "total": false,
-        "values": true
+        "values": false
       },
       "lines": true,
       "linewidth": 2,
@@ -376,51 +380,19 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "Cached",
-          "color": "#64B0C8"
-        }
-      ],
+      "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "node_memory_MemTotal{instance=\"$node\"} - node_memory_MemFree{instance=\"$node\"} - node_memory_Buffers{instance=\"$node\"} - node_memory_Cached{instance=\"$node\"}",
-          "hide": false,
+          "expr": "rate(node_disk_io_time_ms{instance=\"$node\",device=~\"$disks\"}[$__rate_interval])/1000",
+          "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Used",
-          "metric": "node_memory_MemFree",
-          "refId": "A",
-          "step": 10
-        },
-        {
-          "expr": "node_memory_Buffers{instance=\"$node\"}",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Buffered",
-          "metric": "node_memory_Buffers",
-          "refId": "D",
-          "step": 10
-        },
-        {
-          "expr": "node_memory_Cached{instance=\"$node\"}",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Cached",
-          "metric": "node_memory_SwapFree",
+          "legendFormat": "{{device}}",
+          "metric": "node_disk_io_time_ms",
           "refId": "B",
-          "step": 10
-        },
-        {
-          "expr": "node_memory_MemFree{instance=\"$node\"}",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Free",
-          "metric": "node_memory_MemTotal",
-          "refId": "C",
           "step": 10
         }
       ],
@@ -428,12 +400,12 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Memory",
+      "title": "Disk IO Utilization",
       "tooltip": {
         "msResolution": false,
         "shared": true,
         "sort": 0,
-        "value_type": "individual"
+        "value_type": "cumulative"
       },
       "type": "graph",
       "xaxis": {
@@ -445,15 +417,17 @@
       },
       "yaxes": [
         {
-          "format": "bytes",
+          "$$hashKey": "object:92",
+          "format": "percentunit",
           "label": null,
           "logBase": 1,
-          "max": null,
+          "max": "1",
           "min": "0",
           "show": true
         },
         {
-          "format": "short",
+          "$$hashKey": "object:93",
+          "format": "ms",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -481,19 +455,60 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 50
-              },
-              {
-                "color": "red",
-                "value": 75
               }
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "+Inf"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "10|30"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 7,
@@ -503,7 +518,7 @@
       },
       "id": 15,
       "options": {
-        "displayMode": "gradient",
+        "displayMode": "lcd",
         "orientation": "vertical",
         "reduceOptions": {
           "calcs": [
@@ -530,9 +545,134 @@
       "timeShift": null,
       "title": "Search Time Histogram (at least one plot passed filter)",
       "type": "bargauge"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "grid": {},
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 19,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.1",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "/.* written/",
+          "transform": "negative-Y"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(node_disk_bytes_read{instance=\"$node\",device=~\"$disks\"}[$__rate_interval])",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{device}} read",
+          "metric": "node_disk_bytes_read",
+          "refId": "B",
+          "step": 10
+        },
+        {
+          "expr": "irate(node_disk_bytes_written{instance=\"$node\",device=~\"$disks\"}[$__rate_interval])",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{device}} written",
+          "metric": "node_disk_",
+          "refId": "C",
+          "step": 10
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Disk Thoughput",
+      "tooltip": {
+        "msResolution": false,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:316",
+          "format": "Bps",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:317",
+          "format": "ms",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
-  "refresh": "1m",
+  "refresh": false,
   "schemaVersion": 27,
   "style": "dark",
   "tags": [],
@@ -573,15 +713,16 @@
         "allValue": null,
         "current": {
           "selected": true,
+          "tags": [],
           "text": [
-            "/chia_tmp",
             "/farm2",
-            "/farm"
+            "/farm",
+            "/chia_tmp"
           ],
           "value": [
-            "/chia_tmp",
             "/farm2",
-            "/farm"
+            "/farm",
+            "/chia_tmp"
           ]
         },
         "datasource": null,
@@ -607,16 +748,60 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "tags": [],
+          "text": [
+            "sda",
+            "sdh",
+            "sdg",
+            "sdi",
+            "nvme0n1"
+          ],
+          "value": [
+            "sda",
+            "sdh",
+            "sdg",
+            "sdi",
+            "nvme0n1"
+          ]
+        },
+        "datasource": null,
+        "definition": "label_values(node_disk_io_time_ms, device)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "disks",
+        "options": [],
+        "query": {
+          "query": "label_values(node_disk_io_time_ms, device)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
       }
     ]
   },
   "time": {
-    "from": "now-6h",
-    "to": "now"
+    "from": "2021-04-30T06:42:05.596Z",
+    "to": "2021-04-30T11:56:29.770Z"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Chia",
   "uid": "P-ipES9Mz",
-  "version": 20
+  "version": 29
 }

@@ -6,6 +6,8 @@ Example using [mtail](https://github.com/google/mtail) to collect metrics from
 [Prometheus](https://prometheus.io/) and graph in
 [Grafana](https://grafana.com).
 
+![Chia dashboard](https://img.kmr.me/posts/chiamon.png)
+
 ## mtail program
 
 The mtail program is in `mtail/chialog.mtail`. Currently it only collects harvester metrics:
