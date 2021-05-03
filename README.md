@@ -1,12 +1,13 @@
 # ChiaMon
 
 Example using [mtail](https://github.com/google/mtail) to collect metrics from
-[Chia](https://chia.net) logs, with
-[docker-compose](https://github.com/docker/compose/) stack to collect data with
-[Prometheus](https://prometheus.io/) and graph in
+[Chia](https://chia.net) logs,
+[chia_exporter](https://github.com/retzkek/chia_exporter) to collect metrics
+from the Chia node, with a [docker-compose](https://github.com/docker/compose/)
+stack to collect data with [Prometheus](https://prometheus.io/) and graph in
 [Grafana](https://grafana.com).
 
-![Chia dashboard](https://img.kmr.me/posts/chiamon.png)
+![Chia dashboard](https://img.kmr.me/posts/chiamon2.png)
 
 ## mtail program
 
@@ -18,23 +19,25 @@ The mtail program is in `mtail/chialog.mtail`. Currently it only collects harves
 * `chia_harvester_proofs_total`: cumulative number of proofs won
 * `chia_harvester_search_time`: histogram of proof search times
 
+## chia_exporter
+
+The [chia_exporter](https://github.com/retzkek/chia_exporter) is used to collect
+metrics from the Chia node [RPC
+API](https://github.com/Chia-Network/chia-blockchain/wiki/RPC-Interfaces).
+
 ## Grafana dashboard
 
-The Grafana dashboard is in `grafana/dashboards/Chia.json`. It assumed the
-Prometheus datasource is named `Prometheus`, that the plotting drive is mounted
-at `/chia_tmp` and that the farming drives are mounted at `/farm*` (if your
-setup is different, change the dashboard, not your setup!).
+The Grafana dashboard is in `grafana/dashboards/Chia.json`. It defines a number
+of variables that will be auto-populated from the node metrics; use the
+dropdowns to customize to show show the drives, mounts, etc that you're
+interested in monitoring.
 
 ## Stack
 
 The docker-compose file will mount the Chia log from
 `$HOME/.chia/mainnet/log/debug.log`, verify that this location is correct and
 set the log level to INFO in the Chia configuration (usually at
-`$HOME/.chia/mainnet/config/config.yaml`):
-
-``` yaml
-    log_level: INFO
-```
+`$HOME/.chia/mainnet/config/config.yaml`).
 
 Run:
 
@@ -43,8 +46,9 @@ Run:
 This will do the following:
 
 * Build container image with configuration for mtail from source
+* Build container image for chia_exporter from source
 * Download node_exporter, prometheus, and grafana images from docker hub
-* Run containers in the background
+* Run containers in the background, attached to the host network
     
 The grafana service provisions the prometheus datasource and a basic dashboard
 that displays harvester and node metrics.

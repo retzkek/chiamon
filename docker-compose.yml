@@ -10,6 +10,7 @@ services:
       - "-logtostderr"
     volumes:
       - ${HOME}/.chia/mainnet/log/debug.log:/var/log/chia/debug.log
+    network_mode: host
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
     command:
@@ -17,15 +18,25 @@ services:
     pid: host
     volumes:
       - '/:/host:ro,rslave'
+    network_mode: host
+  chia_exporter:
+    build: chia_exporter
+    command:
+      - "-cert"
+      - "/etc/chia.crt"
+      - "-key"
+      - "/etc/chia.key"
+    volumes:
+      - ${HOME}/.chia/mainnet/config/ssl/full_node/private_full_node.crt:/etc/chia.crt
+      - ${HOME}/.chia/mainnet/config/ssl/full_node/private_full_node.key:/etc/chia.key
+    network_mode: host
   prometheus:
     build: prometheus
-    ports:
-      - "127.0.0.1:9090:9090"
     volumes:
       - prom_data:/prometheus
+    network_mode: host
   grafana:
     build: grafana
-    ports:
-      - "127.0.0.1:3000:3000"
+    network_mode: host
 volumes:
   prom_data:

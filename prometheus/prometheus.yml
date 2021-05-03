@@ -9,7 +9,10 @@ scrape_configs:
       - targets: ['localhost:9090']
   - job_name: 'node'
     static_configs:
-      - targets: ['node_exporter:9100']
+      - targets: ['localhost:9100']
   - job_name: 'mtail'
     static_configs:
-      - targets: ['mtail:3903']
+      - targets: ['localhost:3903']
+  - job_name: 'chia'
+    static_configs:
+      - targets: ['localhost:9133']
