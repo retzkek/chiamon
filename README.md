@@ -70,7 +70,7 @@ data directories; consult each project's documentation for details.
   docs](https://github.com/prometheus/node_exporter#docker). If you do run it in
   Docker, you'll need to bind-mount in any other volumes you want to monitor
   (add them to the `volumes` list in `docker-compose.yml`, e.g. `-
-  '/scratch:/scratch`).
+  '/scratch:/scratch'`).
 
 * To run this on **Windows**, you'll need to use the [Windows
 exporter](https://github.com/prometheus-community/windows_exporter) instead of
