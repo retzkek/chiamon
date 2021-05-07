@@ -9,7 +9,7 @@ services:
       - "/var/log/chia/debug.log"
       - "-logtostderr"
     volumes:
-      - ${HOME}/.chia/mainnet/log/debug.log:/var/log/chia/debug.log
+      - ${HOME}/.chia/mainnet/log/:/var/log/chia/
     network_mode: host
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
