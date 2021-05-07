@@ -65,6 +65,13 @@ data or the Grafana database, so changes will be lost when the services are
 recreated. To do that you'd want to bind-mount local paths to the respective
 data directories; consult each project's documentation for details.
 
+* It's highly encouraged to run the node exporter natively rather than in
+  docker - see the discussion in the [node_exporter
+  docs](https://github.com/prometheus/node_exporter#docker). If you do run it in
+  Docker, you'll need to bind-mount in any other volumes you want to monitor
+  (add them to the `volumes` list in `docker-compose.yml`, e.g. `-
+  '/scratch:/scratch`).
+
 * To run this on **Windows**, you'll need to use the [Windows
 exporter](https://github.com/prometheus-community/windows_exporter) instead of
 the node_exporter, and change the dashboard appropriately. See [issue
