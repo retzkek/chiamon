@@ -34,6 +34,8 @@ interested in monitoring.
 
 ## Stack
 
+**This stack was created for development on Linux. See notes below for other platforms.***
+
 The docker-compose file will mount the Chia log from
 `$HOME/.chia/mainnet/log/debug.log`, verify that this location is correct and
 set the log level to INFO in the Chia configuration (usually at
@@ -56,9 +58,17 @@ that displays harvester and node metrics.
 Access Grafana at http://localhost:3000 and login with the default admin/admin
 username and password (you'll be prompted to change the password).
 
-## Note
+### Notes
 
-This is not a production-ready deployment; there's no persistence of Prometheus
+* This is not a production-ready deployment; there's no persistence of Prometheus
 data or the Grafana database, so changes will be lost when the services are
 recreated. To do that you'd want to bind-mount local paths to the respective
 data directories; consult each project's documentation for details.
+
+* To run this on **Windows**, you'll need to use the [Windows
+exporter](https://github.com/prometheus-community/windows_exporter) instead of
+the node_exporter, and change the dashboard appropriately. See [issue
+#2](https://github.com/retzkek/chiamon/issues/2).
+
+* On **Mac** you'll need to run node_exporter natively, not under Docker: `brew
+  install node_exporter`
