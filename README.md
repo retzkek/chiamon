@@ -34,7 +34,7 @@ interested in monitoring.
 
 ## Stack
 
-**This stack was created for development on Linux. See notes below for other platforms.***
+**This stack was created for development on Linux. See notes below for other platforms.**
 
 The docker-compose file will mount the Chia log from
 `$HOME/.chia/mainnet/log/debug.log`, verify that this location is correct and
@@ -75,7 +75,7 @@ data directories; consult each project's documentation for details.
 * To run this on **Windows**, you'll need to use the [Windows
 exporter](https://github.com/prometheus-community/windows_exporter) instead of
 the node_exporter, and change the dashboard appropriately. See [issue
-#2](https://github.com/retzkek/chiamon/issues/2).
+#2](https://github.com/retzkek/chiamon/issues/2) and the [windows branch](https://github.com/retzkek/chiamon/tree/windows) for details and a modified configuration and dashboard.
 
 * On **Mac** you'll need to run node_exporter natively, not under Docker: `brew
-  install node_exporter`
+  install node_exporter`. Remove the `node_exporter` service from the docker-compose config.
