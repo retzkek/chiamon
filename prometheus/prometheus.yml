@@ -6,13 +6,13 @@ global:
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['prometheus:9090']
   - job_name: 'node'
     static_configs:
-      - targets: ['localhost:9100']
+      - targets: ['host.docker.internal:9182']
   - job_name: 'mtail'
     static_configs:
-      - targets: ['localhost:3903']
+      - targets: ['mtail:3903']
   - job_name: 'chia'
     static_configs:
-      - targets: ['localhost:9133']
+      - targets: ['chia_exporter:9133']
