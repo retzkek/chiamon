@@ -32,9 +32,7 @@ of variables that will be auto-populated from the node metrics; use the
 dropdowns to customize to show show the drives, mounts, etc that you're
 interested in monitoring.
 
-## Stack
-
-**This stack was created for development on Linux. See notes below for other platforms.**
+## Linux/Mac
 
 The docker-compose file will mount the Chia log from
 `$HOME/.chia/mainnet/log/debug.log`, verify that this location is correct and
@@ -72,10 +70,20 @@ data directories; consult each project's documentation for details.
   (add them to the `volumes` list in `docker-compose.yml`, e.g. `-
   '/scratch:/scratch'`). See [issue #3](https://github.com/retzkek/chiamon/issues/3).
 
-* To run this on **Windows**, you'll need to use the [Windows
-exporter](https://github.com/prometheus-community/windows_exporter) instead of
-the node_exporter, and change the dashboard appropriately. See [issue
-#2](https://github.com/retzkek/chiamon/issues/2) and the [windows branch](https://github.com/retzkek/chiamon/tree/windows) for details and a modified configuration and dashboard.
-
 * On **Mac** you'll need to run node_exporter natively, not under Docker: `brew
-  install node_exporter`. Remove the `node_exporter` service from the docker-compose config.
+  install node_exporter`.
+
+## Windows
+
+Modified config and dashboard are in the [windows branch](https://github.com/retzkek/chiamon/tree/windows).
+
+* Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
+* Install [Visual Studio Code](https://code.visualstudio.com/)
+* Install [git](https://git-scm.com/)
+* Install [Windows exporter](https://github.com/prometheus-community/windows_exporter/releases/download/v0.16.0/windows_exporter-0.16.0-386.msi)
+* Clone the chiamon repository with VSCode
+* Modify `docker-compose.yml`:
+    - Change volume paths to point to your home directory.
+* Run services. In VSCode with docker extension you can just right-click on `docker-compose.yml` and select "Compose Up"
+* Check target status in Prometheus at http://localhost:9090/targets 
+* Access Grafana at http://localhost:3000 (admin/admin).
