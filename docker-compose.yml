@@ -35,6 +35,17 @@ services:
     volumes:
       - prom_data:/prometheus
     network_mode: host
+  loki:
+    image: grafana/loki:2.0.0
+    command: -config.file=/etc/loki/local-config.yaml
+    network_mode: host
+  promtail:
+    build: promtail
+    volumes:
+      - ${HOME}/.chia/mainnet/log:/var/log/chia
+      - ${HOME}/.chia/mainnet/plotter:/var/log/plotter
+    command: -config.file=/etc/promtail/config.yml
+    network_mode: host
   grafana:
     build: grafana
     network_mode: host
