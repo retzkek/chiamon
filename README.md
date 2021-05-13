@@ -18,7 +18,9 @@ The mtail program is in `mtail/chialog.mtail`. Currently it only collects harves
 * `chia_harvester_plots_eligible`: cumulative number of plots that passed filter
 * `chia_harvester_proofs_total`: cumulative number of proofs won
 * `chia_harvester_search_time`: histogram of proof search times
+
 Please set log_level to INFO in your config.yaml
+
 ## chia_exporter
 
 The [chia_exporter](https://github.com/retzkek/chia_exporter) is used to collect
