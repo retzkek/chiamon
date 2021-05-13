@@ -19,6 +19,8 @@ services:
       - "/etc/chia.key"
       - "-url"
       - "https://host.docker.internal:8555"
+      - "-wallet"
+      - "https://host.docker.internal:9256"
     volumes:
       - c:/Users/retzk/.chia/mainnet/config/ssl/full_node/private_full_node.crt:/etc/chia.crt
       - c:/Users/retzk/.chia/mainnet/config/ssl/full_node/private_full_node.key:/etc/chia.key
