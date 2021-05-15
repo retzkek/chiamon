@@ -1,0 +1,7 @@
+process_names:
+  #@see https://github.com/ncabatoff/process-exporter for documentation
+  - comm:
+    - chia
+    cmdline:
+      - plots create
+
