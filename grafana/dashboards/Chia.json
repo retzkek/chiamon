@@ -9,6 +9,16 @@
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
         "type": "dashboard"
+      },
+      {
+        "datasource": "Loki",
+        "enable": true,
+        "expr": "{job=\"plotter\"}|~\"Starting plotting|Time for phase|Total time\"",
+        "hide": false,
+        "iconColor": "rgba(255, 96, 96, 1)",
+        "name": "plotter",
+        "showIn": 0,
+        "target": {}
       }
     ]
   },
@@ -16,7 +26,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": 1,
-  "iteration": 1620011566939,
+  "iteration": 1621098681551,
   "links": [],
   "panels": [
     {
@@ -61,7 +71,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 4,
         "w": 6,
         "x": 0,
         "y": 0
@@ -262,6 +272,66 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "mojo"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 4
+      },
+      "id": 28,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.4",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "chia_wallet_confirmed_balance_mojo",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Balance",
+      "type": "stat"
     },
     {
       "aliasColors": {},
@@ -576,9 +646,11 @@
       "pluginVersion": "7.5.4",
       "targets": [
         {
-          "expr": "sum(chia_harvester_search_time_bucket{plots_eligible!=\"0\"}) by (le)",
+          "exemplar": true,
+          "expr": "sum(increase(chia_harvester_search_time_bucket{plots_eligible!=\"0\"}[$__range])) by (le)",
           "format": "heatmap",
           "hide": false,
+          "instant": true,
           "interval": "",
           "legendFormat": "{{le}}",
           "refId": "C"
@@ -1139,6 +1211,66 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "datasource": "Loki",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "id": 31,
+      "options": {
+        "dedupStrategy": "none",
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "7.5.4",
+      "targets": [
+        {
+          "expr": "{job=\"chia\"}|=\"harvester.harvester\"|=\"WARNING\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Harvester Warnings",
+      "type": "logs"
+    },
+    {
+      "datasource": "Loki",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "id": 30,
+      "options": {
+        "dedupStrategy": "none",
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "7.5.4",
+      "targets": [
+        {
+          "expr": "{job=\"plotter\"}!=\"uniform sort\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Plotter Logs",
+      "type": "logs"
     }
   ],
   "refresh": "1m",
@@ -1150,7 +1282,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "localhost:9100",
           "value": "localhost:9100"
         },
@@ -1182,7 +1314,6 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "tags": [],
           "text": [
             "/"
           ],
@@ -1218,7 +1349,6 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "tags": [],
           "text": [
             "All"
           ],
@@ -1254,7 +1384,6 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "tags": [],
           "text": [
             "All"
           ],

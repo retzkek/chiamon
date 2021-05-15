@@ -1,13 +1,30 @@
 # ChiaMon
 
-Example using [mtail](https://github.com/google/mtail) to collect metrics from
-[Chia](https://chia.net) logs,
-[chia_exporter](https://github.com/retzkek/chia_exporter) to collect metrics
-from the Chia node, with a [docker-compose](https://github.com/docker/compose/)
-stack to collect data with [Prometheus](https://prometheus.io/) and graph in
-[Grafana](https://grafana.com).
+Example Chia monitoring stack, using:
 
-![Chia dashboard](https://img.kmr.me/posts/chiamon2.png)
+* [mtail](https://github.com/google/mtail) to collect metrics from
+  [Chia](https://chia.net) logs
+* [chia_exporter](https://github.com/retzkek/chia_exporter) to collect metrics
+  from the Chia node
+* [node_exporter](https://github.com/prometheus/node_exporter) or [windows
+  exporter](https://github.com/prometheus-community/windows_exporter/) to
+  collect system metrics
+* [prometheus](https://prometheus.io/) to store metrics
+* [promtail](https://grafana.com/docs/loki/latest/clients/promtail/) and
+  [loki](https://grafana.com/docs/loki/latest/) to collect and store logs from
+  the Chia node and plotters (and system too if desired)
+* [grafana](https://grafana.com) to display everything
+
+This includes a [docker-compose](https://github.com/docker/compose/)
+configuration to run everything, but this is primarily intended for development
+and testing.
+
+**WARNING this is NOT a one-click install, expect to need to do some work
+setting everything up for your machine. PLEASE read the notes below and
+understand what all the services are, what they do, and how they work
+together.**
+
+![Chia dashboard](https://img.kmr.me/posts/chiamon3.png)
 
 ## mtail program
 
@@ -19,7 +36,7 @@ The mtail program is in `mtail/chialog.mtail`. Currently it only collects harves
 * `chia_harvester_proofs_total`: cumulative number of proofs won
 * `chia_harvester_search_time`: histogram of proof search times
 
-Please set log_level to INFO in your config.yaml
+**NOTE** you need to set log_level to INFO in your Chia config.yaml to get harvester metrics.
 
 ## chia_exporter
 
@@ -29,12 +46,13 @@ API](https://github.com/Chia-Network/chia-blockchain/wiki/RPC-Interfaces).
 
 ## Grafana dashboard
 
-The Grafana dashboard is in `grafana/dashboards/Chia.json`. It defines a number
-of variables that will be auto-populated from the node metrics; use the
-dropdowns to customize to show show the drives, mounts, etc that you're
-interested in monitoring.
+The example Grafana dashboard is in `grafana/dashboards/Chia.json`. It defines a
+number of variables that will be auto-populated from the node metrics. Grafana
+dashboards are [easily customized](https://grafana.com/docs/) to show what
+you're interested in seeing, in the way you find best; this dashboard is just
+meant to demonstrate what can be done.
 
-## Linux/Mac
+## Running on Linux/Mac
 
 The docker-compose file will mount the Chia log from
 `$HOME/.chia/mainnet/log/debug.log`, verify that this location is correct and
@@ -44,26 +62,22 @@ set the log level to INFO in the Chia configuration (usually at
 Run:
 
     docker-compose up -d
-    
+
 This will do the following:
 
 * Build container image with configuration for mtail from source
 * Build container image for chia_exporter from source
-* Download node_exporter, prometheus, and grafana images from docker hub
-* Run containers in the background, attached to the host network
-    
-The grafana service provisions the prometheus datasource and a basic dashboard
-that displays harvester and node metrics.
+* Download other images from docker hub
+* Run containers in the background, attached to the host network (this makes it
+  easy to communicate with native services, but has some trade-offs. See notes.)
+
+The grafana service provisions the prometheus and loki datasources and a basic
+dashboard that displays harvester and node metrics.
 
 Access Grafana at http://localhost:3000 and login with the default admin/admin
 username and password (you'll be prompted to change the password).
 
 ### Notes
-
-* This is not a production-ready deployment; there's no persistence of Prometheus
-data or the Grafana database, so changes will be lost when the services are
-recreated. To do that you'd want to bind-mount local paths to the respective
-data directories; consult each project's documentation for details.
 
 * It's highly encouraged to run the node exporter natively rather than in
   docker - see the discussion in the [node_exporter
@@ -73,11 +87,19 @@ data directories; consult each project's documentation for details.
   '/scratch:/scratch'`). See [issue #3](https://github.com/retzkek/chiamon/issues/3).
 
 * On **Mac** you'll need to run node_exporter natively, not under Docker: `brew
-  install node_exporter`.
+  install node_exporter`. You'll probably need to change the networking setup
+  too, since Docker on Mac runs in a VM. See the windows docker-compose and
+  prometheus configs.
 
-## Windows
+## Running on Windows
 
-Modified config and dashboard are in the [windows branch](https://github.com/retzkek/chiamon/tree/windows).
+The node exporter **does not** work on Windows; instead you need to use the
+Windows exporter for system metrics. Modified config and example dashboard are
+in the [windows branch](https://github.com/retzkek/chiamon/tree/windows). You
+may also want to review the discussion in [issue
+#2](https://github.com/retzkek/chiamon/issues/2).
+
+These steps will get you to a working setup (but aren't the only way):
 
 * Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
 * Install [Visual Studio Code](https://code.visualstudio.com/)
@@ -87,5 +109,5 @@ Modified config and dashboard are in the [windows branch](https://github.com/ret
 * Modify `docker-compose.yml`:
     - Change volume paths to point to your home directory.
 * Run services. In VSCode with docker extension you can just right-click on `docker-compose.yml` and select "Compose Up"
-* Check target status in Prometheus at http://localhost:9090/targets 
+* Check target status in Prometheus at http://localhost:9090/targets
 * Access Grafana at http://localhost:3000 (admin/admin).

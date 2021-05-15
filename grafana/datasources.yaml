@@ -1,9 +1,11 @@
 # config file version
-apiVersion: 1
+apiVersion: 2
 
 # list of datasources that should be deleted from the database
 deleteDatasources:
   - name: Prometheus
+    orgId: 1
+  - name: Loki
     orgId: 1
 
 # list of datasources to insert/update depending
@@ -13,11 +15,17 @@ datasources:
     type: prometheus
     access: proxy
     orgId: 1
-    # <string> custom UID which can be used to reference this datasource in other parts of the configuration, if not specified will be generated automatically
-    uid: my_unique_uid
     url: http://localhost:9090
     isDefault: true
     version: 1
     # <bool> allow users to edit datasources from the UI.
     editable: true
-
+  - name: Loki
+    type: loki
+    access: proxy
+    orgId: 1
+    url: http://localhost:3100
+    isDefault: false
+    version: 1
+    # <bool> allow users to edit datasources from the UI.
+    editable: true
