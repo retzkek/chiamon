@@ -14,12 +14,12 @@ scrape_configs:
       - targets:
           - localhost
         labels:
-          job: chia
+          job: chia-$HOSTNAME
           __path__: /var/log/chia/*
   - job_name: plotter
     static_configs:
       - targets:
           - localhost
         labels:
-          job: plotter
+          job: plotter-$ENV_HOSTNAME
           __path__: /var/log/plotter/*

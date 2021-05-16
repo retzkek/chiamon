@@ -7,6 +7,7 @@ x-build: &common-build-args
     - grafana_ip=${GRAFANA_IP}
     - loki_ip=${LOKI_IP}
     - prometheus_ip=${PROMETHEUS_IP}
+    - hostname=${HOSTNAME}
 
 services:
   mtail:
