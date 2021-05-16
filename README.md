@@ -86,6 +86,14 @@ username and password (you'll be prompted to change the password).
   (add them to the `volumes` list in `docker-compose.yml`, e.g. `-
   '/scratch:/scratch'`). See [issue #3](https://github.com/retzkek/chiamon/issues/3).
 
+* The docker-compose file uses the `$HOME` environment variable for the Chia log
+  paths. Verify that these paths are correct, and if you run the
+  `docker-compose` commands with `sudo` then you'll have to replace `$HOME`
+  with the actual path (since root's home is not your home!). Even better, add
+  your user to the `docker` group so you don't have to use `sudo`:
+
+        sudo usermod -a -G docker username
+
 * On **Mac** you'll need to run node_exporter natively, not under Docker: `brew
   install node_exporter`. You'll probably need to change the networking setup
   too, since Docker on Mac runs in a VM. See the windows docker-compose and
