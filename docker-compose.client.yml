@@ -48,10 +48,14 @@ services:
     volumes:
       - ${HOME}/.chia/mainnet/config/ssl/full_node/private_full_node.crt:/etc/chia.crt
       - ${HOME}/.chia/mainnet/config/ssl/full_node/private_full_node.key:/etc/chia.key
-    networks:
-      - backend
-    ports:
-      - 9133:9133
+    network_mode:
+      host
+      # networks:
+    #   - backend
+    # ports:
+    #   - 9133:9133
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
   promtail:
     build:
       <<: *common-build-args
