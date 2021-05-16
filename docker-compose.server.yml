@@ -35,6 +35,26 @@ services:
       - frontend
     ports:
       - 3000:3000
+  chia_exporter:
+    build:
+      <<: *common-build-args
+      context: containers/chia_exporter
+    command:
+      - "-cert"
+      - "/etc/chia.crt"
+      - "-key"
+      - "/etc/chia.key"
+    volumes:
+      - ${HOME}/.chia/mainnet/config/ssl/full_node/private_full_node.crt:/etc/chia.crt
+      - ${HOME}/.chia/mainnet/config/ssl/full_node/private_full_node.key:/etc/chia.key
+    network_mode:
+      host
+      # networks:
+    #   - backend
+    # ports:
+    #   - 9133:9133
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
 volumes:
   prom_data:
 
