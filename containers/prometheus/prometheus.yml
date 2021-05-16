@@ -7,12 +7,23 @@ scrape_configs:
   - job_name: "prometheus"
     static_configs:
       - targets: ["localhost:9090"]
-  - job_name: "node"
+  - job_name: "node-plotter"
     static_configs:
       - targets: ["$ENV_NODE_IP:9100"]
-  - job_name: "mtail"
+  - job_name: "mtail-plotter"
     static_configs:
       - targets: ["$ENV_MTAIL_HARVESTER_IP:3903"]
-  - job_name: "chia"
+  - job_name: "chia-plotter"
     static_configs:
       - targets: ["$ENV_CHIA_EXPORTER_IP:9133"]
+
+  # now for rpi
+  - job_name: "node-rpi"
+    static_configs:
+      - targets: ["192.168.1.23:9100"]
+  - job_name: "mtail-rpi"
+    static_configs:
+      - targets: ["192.168.1.23:3903"]
+  - job_name: "chia-rpi"
+    static_configs:
+      - targets: ["192.168.1.23:9133"]
