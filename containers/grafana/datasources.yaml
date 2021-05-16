@@ -15,7 +15,7 @@ datasources:
     type: prometheus
     access: proxy
     orgId: 1
-    url: http://$ENV_PROMETHEUS_IP:9090
+    url: http://$ENV_PROMETHEUS_IP:9091
     isDefault: true
     version: 1
     # <bool> allow users to edit datasources from the UI.
