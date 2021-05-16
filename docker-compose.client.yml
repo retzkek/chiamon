@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.3"
 x-build: &common-build-args
   args:
     - node_exporter_ip=${NODE_EXPORTER_IP}
