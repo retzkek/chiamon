@@ -1,4 +1,4 @@
-version: '2'
+version: "3.9"
 services:
   mtail:
     build: mtail
@@ -10,15 +10,17 @@ services:
       - "-logtostderr"
     volumes:
       - ${HOME}/.chia/mainnet/log/:/var/log/chia/
-    network_mode: host
+    networks:
+      - backend
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
     command:
-      - '--path.rootfs=/host'
+      - "--path.rootfs=/host"
     pid: host
     volumes:
-      - '/:/host:ro,rslave'
-    network_mode: host
+      - "/:/host:ro,rslave"
+    networks:
+      - backend
   chia_exporter:
     build: chia_exporter
     command:
@@ -29,25 +31,39 @@ services:
     volumes:
       - ${HOME}/.chia/mainnet/config/ssl/full_node/private_full_node.crt:/etc/chia.crt
       - ${HOME}/.chia/mainnet/config/ssl/full_node/private_full_node.key:/etc/chia.key
-    network_mode: host
+    networks:
+      - backend
   prometheus:
     build: prometheus
     volumes:
       - prom_data:/prometheus
-    network_mode: host
+    networks:
+      - backend
   loki:
     image: grafana/loki:2.0.0
     command: -config.file=/etc/loki/local-config.yaml
-    network_mode: host
+    networks:
+      - backend
   promtail:
     build: promtail
     volumes:
       - ${HOME}/.chia/mainnet/log:/var/log/chia
       - ${HOME}/.chia/mainnet/plotter:/var/log/plotter
     command: -config.file=/etc/promtail/config.yml
-    network_mode: host
+    networks:
+      - backend
   grafana:
     build: grafana
-    network_mode: host
+    networks:
+      - backend
+      - frontend
+    ports:
+      - 3000:3000
 volumes:
   prom_data:
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge

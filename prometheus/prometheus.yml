@@ -1,18 +1,18 @@
 global:
-  scrape_interval:     10s
+  scrape_interval: 10s
   evaluation_interval: 10s
-  scrape_timeout:      10s
+  scrape_timeout: 10s
 
 scrape_configs:
-  - job_name: 'prometheus'
+  - job_name: "prometheus"
     static_configs:
-      - targets: ['localhost:9090']
-  - job_name: 'node'
+      - targets: ["localhost:9090"]
+  - job_name: "node"
     static_configs:
-      - targets: ['localhost:9100']
-  - job_name: 'mtail'
+      - targets: ["node_exporter:9100"]
+  - job_name: "mtail"
     static_configs:
-      - targets: ['localhost:3903']
-  - job_name: 'chia'
+      - targets: ["mtail:3903"]
+  - job_name: "chia"
     static_configs:
-      - targets: ['localhost:9133']
+      - targets: ["chia_exporter:9133"]
