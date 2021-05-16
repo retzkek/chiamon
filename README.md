@@ -111,3 +111,19 @@ These steps will get you to a working setup (but aren't the only way):
 * Run services. In VSCode with docker extension you can just right-click on `docker-compose.yml` and select "Compose Up"
 * Check target status in Prometheus at http://localhost:9090/targets
 * Access Grafana at http://localhost:3000 (admin/admin).
+
+## Copyright & License
+
+Copyright 2021 Kevin Retzke
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+details.
+
+See LICENSE.txt
