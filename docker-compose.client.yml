@@ -1,7 +1,18 @@
 version: "3.9"
+x-build: &common-build-args
+  args:
+    - node_exporter_ip=${NODE_EXPORTER_IP}
+    - chia_exporter_ip=${CHIA_EXPORTER_IP}
+    - mtail_harvester_ip=${MTAIL_HARVESTER_IP}
+    - grafana_ip=${GRAFANA_IP}
+    - loki_ip=${LOKI_IP}
+    - prometheus_ip=${PROMETHEUS_IP}
+
 services:
   mtail:
-    build: mtail
+    build:
+      <<: *common-build-args
+      context: containers/mtail
     command:
       - "-progs"
       - "/etc/mtail"
@@ -12,6 +23,8 @@ services:
       - ${HOME}/.chia/mainnet/log/:/var/log/chia/
     networks:
       - backend
+    ports:
+      - 3903:3903
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
     command:
@@ -21,8 +34,12 @@ services:
       - "/:/host:ro,rslave"
     networks:
       - backend
+    ports:
+      - 9100:9100
   chia_exporter:
-    build: chia_exporter
+    build:
+      <<: *common-build-args
+      context: containers/chia_exporter
     command:
       - "-cert"
       - "/etc/chia.crt"
@@ -33,32 +50,21 @@ services:
       - ${HOME}/.chia/mainnet/config/ssl/full_node/private_full_node.key:/etc/chia.key
     networks:
       - backend
-  prometheus:
-    build: prometheus
-    volumes:
-      - prom_data:/prometheus
-    networks:
-      - backend
-  loki:
-    image: grafana/loki:2.0.0
-    command: -config.file=/etc/loki/local-config.yaml
-    networks:
-      - backend
+    ports:
+      - 9133:9133
   promtail:
-    build: promtail
+    build:
+      <<: *common-build-args
+      context: containers/promtail
     volumes:
       - ${HOME}/.chia/mainnet/log:/var/log/chia
       - ${HOME}/.chia/mainnet/plotter:/var/log/plotter
     command: -config.file=/etc/promtail/config.yml
     networks:
       - backend
-  grafana:
-    build: grafana
-    networks:
-      - backend
-      - frontend
     ports:
-      - 3000:3000
+      - 9080:9080
+
 volumes:
   prom_data:
 

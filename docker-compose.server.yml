@@ -1,0 +1,43 @@
+version: "3.9"
+x-build: &common-build-args
+  args:
+    - node_exporter_ip=${NODE_EXPORTER_IP}
+    - chia_exporter_ip=${CHIA_EXPORTER_IP}
+    - mtail_harvester_ip=${MTAIL_HARVESTER_IP}
+    - grafana_ip=${GRAFANA_IP}
+    - loki_ip=${LOKI_IP}
+    - prometheus_ip=${PROMETHEUS_IP}
+
+services:
+  prometheus:
+    build:
+      <<: *common-build-args
+      context: containers/prometheus
+    volumes:
+      - prom_data:/prometheus
+    networks:
+      - backend
+  loki:
+    image: grafana/loki:2.0.0
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - backend
+    ports:
+      - 3100:3100
+  grafana:
+    build:
+      <<: *common-build-args
+      context: containers/grafana
+    networks:
+      - backend
+      - frontend
+    ports:
+      - 3000:3000
+volumes:
+  prom_data:
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge

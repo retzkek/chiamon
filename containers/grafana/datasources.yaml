@@ -15,7 +15,7 @@ datasources:
     type: prometheus
     access: proxy
     orgId: 1
-    url: http://prometheus:9090
+    url: http://$ENV_PROMETHEUS_IP:9090
     isDefault: true
     version: 1
     # <bool> allow users to edit datasources from the UI.
@@ -24,7 +24,7 @@ datasources:
     type: loki
     access: proxy
     orgId: 1
-    url: http://loki:3100
+    url: http://$ENV_LOKI_IP:3100
     isDefault: false
     version: 1
     # <bool> allow users to edit datasources from the UI.
