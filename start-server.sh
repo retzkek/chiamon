@@ -1,4 +1,5 @@
 #!/bin/bash
 
 HOSTNAME=$(hostname)
-docker-compose -f dcoker-compose.server.yml up -d --built
+docker-compose -f docker-compose.server.yml build
+docker-compose -f docker-compose.server.yml up -d
