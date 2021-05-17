@@ -976,21 +976,21 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(increase(node_network_receive_bytes_total{instance=\"$node\",device=~\"$interfaces\"}[24h]))",
+          "expr": "sum(increase(windows_net_bytes_received_total{nic=~\"$interfaces\"}[24h]))",
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": " rx",
-          "metric": "node_network_receive_bytes",
+          "metric": "windows_net_bytes_received_total",
           "refId": "A",
           "step": 10
         },
         {
           "exemplar": true,
-          "expr": "sum(increase(node_network_transmit_bytes_total{instance=\"$node\",device=~\"$interfaces\"}[24h]))",
+          "expr": "sum(increase(windows_net_bytes_sent_total{nic=~\"$interfaces\"}[24h]))",
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "tx",
-          "metric": "node_network_transmit_bytes",
+          "metric": "windows_net_bytes_sent_total",
           "refId": "B",
           "step": 10
         }
