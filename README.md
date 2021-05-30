@@ -120,6 +120,29 @@ These steps will get you to a working setup (but aren't the only way):
 * Check target status in Prometheus at http://localhost:9090/targets
 * Access Grafana at http://localhost:3000 (admin/admin).
 
+## Monitoring Multiple Nodes
+
+To monitor multiple nodes (e.g. multiple harvesters), you just need to run the
+appropriate exporters (e.g. `node_exporter` and `mtail` for a harvester) and add
+them as targets in the prometheus config, for example:
+
+```yaml
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100', 'harvester1:9100', 'harvester2:9100']
+  - job_name: 'mtail'
+    static_configs:
+      - targets: ['localhost:3903', 'harvester1:3903', 'harvester2:3903']
+```
+
+If you're also running Loki to collect logs, you'll also want to run `promtail`
+on every node, and configure it to push logs to Loki on your monitoring node:
+
+```yaml
+clients:
+  - url: http://loki-server:3100/loki/api/v1/push
+```
+
 ## Copyright & License
 
 Copyright 2021 Kevin Retzke
