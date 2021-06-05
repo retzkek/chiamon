@@ -9,10 +9,29 @@ scrape_configs:
       - targets: ['localhost:9090']
   - job_name: 'node'
     static_configs:
-      - targets: ['localhost:9100']
+      - targets: ['localhost:9100','anotherhost:9100']
+    relabel_configs:
+      - source_labels: ['__address__']
+        separator:     ':'
+        regex:         '(.*):.*'
+        target_label:  'instance'
+        replacement:   '${1}'
+
   - job_name: 'mtail'
     static_configs:
-      - targets: ['localhost:3903']
+      - targets: ['localhost:3903','anotherhost:3903']
+    relabel_configs:
+      - source_labels: ['__address__']
+        separator:     ':'
+        regex:         '(.*):.*'
+        target_label:  'instance'
+        replacement:   '${1}'
   - job_name: 'chia'
     static_configs:
-      - targets: ['localhost:9133']
+      - targets: ['localhost:9133','anotherhost:9133']
+    relabel_configs:
+      - source_labels: ['__address__']
+        separator:     ':'
+        regex:         '(.*):.*'
+        target_label:  'instance'
+        replacement:   '${1}'

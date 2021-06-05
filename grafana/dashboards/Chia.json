@@ -26,7 +26,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": 1,
-  "iteration": 1621098681551,
+  "iteration": 1622763525833,
   "links": [],
   "panels": [
     {
@@ -92,10 +92,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "targets": [
         {
-          "expr": "chia_harvester_proofs_total",
+          "exemplar": true,
+          "expr": "chia_harvester_proofs_total{instance=\"$node\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -151,10 +152,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "targets": [
         {
-          "expr": "chia_harvester_plots_total",
+          "exemplar": true,
+          "expr": "chia_harvester_plots_total{instance=\"$node\"}",
           "interval": "",
           "legendFormat": "Plots",
           "refId": "A"
@@ -208,7 +210,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -320,11 +322,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "targets": [
         {
           "exemplar": true,
-          "expr": "chia_wallet_confirmed_balance_mojo",
+          "expr": "chia_wallet_confirmed_balance_mojo{instance=\"$node\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -375,7 +377,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -494,7 +496,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "pointradius": 2,
       "points": true,
       "renderer": "flot",
@@ -504,7 +506,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(1, sum(rate(chia_harvester_search_time_bucket[$__rate_interval])) by (le,plots_eligible))",
+          "exemplar": true,
+          "expr": "histogram_quantile(1, sum(rate(chia_harvester_search_time_bucket{instance=\"$node\"}[$__rate_interval])) by (le,plots_eligible))",
           "hide": false,
           "interval": "",
           "legendFormat": "{{plots_eligible}} Plots Passed Filter",
@@ -643,11 +646,11 @@
         "showUnfilled": true,
         "text": {}
       },
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(increase(chia_harvester_search_time_bucket{plots_eligible!=\"0\"}[$__range])) by (le)",
+          "expr": "sum(increase(chia_harvester_search_time_bucket{instance=\"$node\", plots_eligible!=\"0\"}[$__range])) by (le)",
           "format": "heatmap",
           "hide": false,
           "instant": true,
@@ -703,7 +706,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -827,7 +830,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "targets": [
         {
           "exemplar": true,
@@ -966,23 +969,26 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "targets": [
         {
-          "expr": "chia_blockchain_sync_status",
+          "exemplar": true,
+          "expr": "chia_blockchain_sync_status{instance=\"$node\"}",
           "hide": false,
           "interval": "",
           "legendFormat": "status",
           "refId": "B"
         },
         {
-          "expr": "chia_peers_count{type=\"1\"}",
+          "exemplar": true,
+          "expr": "chia_peers_count{instance=\"$node\", type=\"1\"}",
           "interval": "",
           "legendFormat": "peers",
           "refId": "A"
         },
         {
-          "expr": "chia_blockchain_space_bytes",
+          "exemplar": true,
+          "expr": "chia_blockchain_space_bytes{instance=\"$node\"}",
           "hide": false,
           "interval": "",
           "legendFormat": "netspace",
@@ -1044,7 +1050,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "targets": [
         {
           "exemplar": true,
@@ -1114,7 +1120,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.5.4",
+      "pluginVersion": "7.5.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1235,7 +1241,7 @@
       "pluginVersion": "7.5.4",
       "targets": [
         {
-          "expr": "{job=\"chia\"}|=\"harvester.harvester\"|=\"WARNING\"",
+          "expr": "{job=\"chia-$node\"}|=\"harvester.harvester\"|=\"WARNING\"",
           "refId": "A"
         }
       ],
@@ -1265,7 +1271,7 @@
       "pluginVersion": "7.5.4",
       "targets": [
         {
-          "expr": "{job=\"plotter\"}!=\"uniform sort\"",
+          "expr": "{job=\"plotter-$node\"}!=\"uniform sort\"",
           "refId": "A"
         }
       ],
@@ -1283,8 +1289,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "localhost:9100",
-          "value": "localhost:9100"
+          "text": "localhost",
+          "value": "localhost"
         },
         "datasource": null,
         "definition": "label_values(node_filesystem_size_bytes, instance)",
@@ -1425,5 +1431,5 @@
   "timezone": "",
   "title": "Chia",
   "uid": "P-ipES9Mz",
-  "version": 2
+  "version": 3
 }
