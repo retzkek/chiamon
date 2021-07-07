@@ -81,7 +81,9 @@ username and password (you'll be prompted to change the password).
 
 * It's highly encouraged to run the node exporter natively rather than in
   docker - see the discussion in the [node_exporter
-  docs](https://github.com/prometheus/node_exporter#docker). If you do run it in
+  docs](https://github.com/prometheus/node_exporter#docker). On Ubuntu you can 
+  run `sudo apt install prometheus-node-exporter`, which includes disk SMART 
+  monitoring (disk temperatures, etc) as well. If you do run it in
   Docker, you'll need to bind-mount in any other volumes you want to monitor
   (add them to the `volumes` list in `docker-compose.yml`, e.g. `-
   '/scratch:/scratch'`). See [issue #3](https://github.com/retzkek/chiamon/issues/3).
