@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   mtail:
     build: mtail
@@ -31,20 +31,32 @@ services:
       - ${HOME}/.chia/mainnet/config/ssl/full_node/private_full_node.key:/etc/chia.key
     network_mode: host
   prometheus:
-    build: prometheus
+    image: prom/prometheus:v2.27.0
     volumes:
       - prom_data:/prometheus
+      - ./prometheus/:/etc/prometheus/
     network_mode: host
   loki:
     image: grafana/loki:2.0.0
     command: -config.file=/etc/loki/local-config.yaml
     network_mode: host
   promtail:
-    build: promtail
+    image: grafana/promtail:2.0.0
     volumes:
       - ${HOME}/.chia/mainnet/log:/var/log/chia
       - ${HOME}/.chia/mainnet/plotter:/var/log/plotter
+      - ./promtrail/:/etc/promtail/
     command: -config.file=/etc/promtail/config.yml
+    network_mode: host
+  process_exporter:
+    image: ncabatoff/process-exporter:latest
+    command:
+      - '-procfs=/host/proc'
+      - '-config.path=/config/config.yaml'
+      - "-web.listen-address=:9257"
+    volumes:
+      - /proc:/host/proc
+      - ./process-exporter:/config
     network_mode: host
   grafana:
     build: grafana

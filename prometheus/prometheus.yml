@@ -16,3 +16,6 @@ scrape_configs:
   - job_name: 'chia'
     static_configs:
       - targets: ['localhost:9133']
+  - job_name: 'processes'
+    static_configs:
+      - targets: ['localhost:9257']
